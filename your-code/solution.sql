@@ -47,12 +47,12 @@ select
 a.au_id as author_id, 
 a.au_lname as last_name, 
 a.au_fname as first_name,
-sum(s.qty) as total
+sum(ytd_sales) as total
 from titleauthor ta
 left join  authors a
 on ta.au_id = a.au_id
-left join sales s
-on ta.title_id = s.title_id 
+left join titles t
+on ta.title_id = t.title_id 
 group by author_id 
 order by total desc 
 limit 3;
@@ -64,15 +64,13 @@ distinct
 a.au_id as author_id, 
 a.au_lname as last_name, 
 a.au_fname as first_name,
-case when sum(s.qty)  is null then 0 else  sum(s.qty) end as total
+coalesce(sum(t.ytd_sales), 0) as total
 from authors a
 left join   titleauthor ta
 on ta.au_id = a.au_id
-left join sales s
-on ta.title_id = s.title_id 
+left join titles t
+on ta.title_id = t.title_id 
 group by author_id 
 order by total desc ;
-
-
 
 
